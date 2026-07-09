@@ -14,13 +14,7 @@ import {
   shortPath,
   truncate,
 } from "./format"
-import {
-  OFFICIAL_PRICES,
-  PRICING_SOURCE,
-  PRICING_UPDATED,
-  billingMode,
-  moneySplit,
-} from "./pricing"
+import { OFFICIAL_PRICES, PRICING_SOURCE, PRICING_UPDATED } from "./pricing"
 
 type View = "list" | "detail" | "pricing" | "help" | "models"
 
@@ -39,6 +33,11 @@ type State = {
   detailMaxScroll: number
   cols: number
   rows: number
+  /** 1-based terminal row of first list item (for mouse) */
+  listTopRow: number
+  listH: number
+  lastClickAt: number
+  lastClickIndex: number
 }
 
 // ── palette (bright truecolor - readable on dark terminals) ────────
@@ -118,10 +117,10 @@ function enterApp() {
   process.stdout.write(
     "\x1b[?1049h" + // alternate screen
       "\x1b[?25l" + // hide cursor
-      "\x1b[?1000l" + // no mouse tracking
-      "\x1b[?1002l" +
-      "\x1b[?1003l" +
-      "\x1b[?1006l" +
+      "\x1b[?1000h" + // mouse click
+      "\x1b[?1002h" + // mouse drag
+      "\x1b[?1003h" + // mouse move (optional; some terms need for wheel)
+      "\x1b[?1006h" + // SGR mouse coords
       "\x1b[2J" +
       "\x1b[H" +
       "\x1b[?7l", // no autowrap
@@ -130,11 +129,27 @@ function enterApp() {
 
 function leaveApp() {
   process.stdout.write(
-    "\x1b[?7h" +
-      "\x1b[?25h" + // show cursor
+    "\x1b[?1000l" +
+      "\x1b[?1002l" +
+      "\x1b[?1003l" +
+      "\x1b[?1006l" +
+      "\x1b[?7h" +
+      "\x1b[?25h" +
       "\x1b[?1049l" +
       t.reset,
   )
+}
+
+/** Parse SGR mouse: ESC [ < btn ; x ; y M/m  (1-based x/y) */
+function parseMouse(seq: string): { btn: number; x: number; y: number; release: boolean } | null {
+  const m = seq.match(/^\x1b\[<(\d+);(\d+);(\d+)([Mm])/)
+  if (!m) return null
+  return {
+    btn: Number(m[1]),
+    x: Number(m[2]),
+    y: Number(m[3]),
+    release: m[4] === "m",
+  }
 }
 
 function moveHome() {
@@ -214,12 +229,10 @@ function colLayout(w: number): Cols {
 function titleBar(state: State): string {
   const w = state.cols
   const bg = t.bgHeader
-  const mode = billingMode()
   const left =
     `${t.bold}${t.accent} ◆ gburn ${t.reset}${bg}` +
-    `${t.muted}list price · firm subsidy${t.reset}${bg}`
-  const right =
-    `${t.faint}${state.scan.sessions.length} sessions · ${mode}${t.reset}${bg}`
+    `${t.muted}grok build · api cost${t.reset}${bg}`
+  const right = `${t.faint}${state.scan.sessions.length} sessions${t.reset}${bg}`
   const gap = Math.max(1, w - visLen(left) - visLen(right))
   return paint(left + bg + " ".repeat(gap) + right, w, bg)
 }
@@ -228,13 +241,11 @@ function statsBar(state: State): string {
   const w = state.cols
   const bg = t.bgRaised
   const totals = computeTotals(state.sessions)
-  const money = moneySplit(totals.totalCost)
   const parts = [
-    `${t.faint}LIST${t.reset}${bg} ${t.bold}${t.green}${formatUsd(money.listCost)}${t.reset}${bg}`,
-    `${t.faint}SUB${t.reset}${bg} ${t.bold}${t.yellow}${formatUsd(money.firmSubsidy)}${t.reset}${bg}`,
-    `${t.faint}YOU${t.reset}${bg} ${t.cyan}${formatUsd(money.userPay)}${t.reset}${bg}`,
+    `${t.faint}COST${t.reset}${bg} ${t.bold}${t.green}${formatUsd(totals.totalCost)}${t.reset}${bg}`,
     `${t.faint}IN${t.reset}${bg} ${t.cyan}${formatTokens(totals.inputTokens)}${t.reset}${bg}`,
     `${t.faint}OUT${t.reset}${bg} ${t.magenta}${formatTokens(totals.outputTokens)}${t.reset}${bg}`,
+    `${t.faint}OK${t.reset}${bg} ${t.yellow}${totals.withDetailed}/${totals.sessions}${t.reset}${bg}`,
   ]
   if (state.query) {
     parts.push(
@@ -248,7 +259,7 @@ function statsBar(state: State): string {
 function tableHeader(cols: Cols, w: number): string {
   const cells =
     " " +
-    padVis(`${t.faint}LIST${t.reset}`, cols.cost, "right") +
+    padVis(`${t.faint}COST${t.reset}`, cols.cost, "right") +
     (cols.bar ? " " + padVis("", cols.bar) : "") +
     " " +
     padVis(`${t.faint}INPUT${t.reset}`, cols.input, "right") +
@@ -420,12 +431,12 @@ function footerBar(state: State): string {
     keys = hints(
       [
         ["↑↓", "move"],
-        ["↵", "open"],
+        ["click", "select"],
+        ["dbl", "open"],
         ["/", "find"],
         ["s", "sort"],
         ["p", "price"],
         ["m", "models"],
-        ["?", "help"],
         ["q", "quit"],
       ],
       bg,
@@ -477,6 +488,9 @@ function renderListView(state: State): string[] {
   const chrome =
     titleH + statsH + ruleH + theadH + theadRuleH + footerH + previewH
   const listH = Math.max(3, h - chrome)
+  // rows above first data line: title, stats, rule, thead, theadRule = 5 (1-based row 6)
+  state.listTopRow = titleH + statsH + ruleH + theadH + theadRuleH + 1
+  state.listH = listH
 
   const cols = colLayout(w)
   const maxCost = Math.max(
@@ -604,16 +618,11 @@ function renderDetail(state: State): string[] {
   )
 
   body.push(` ${t.border}${repeat("─", Math.min(w, 48))}${t.reset}`)
-  const money = moneySplit(u.cost.totalCost)
-  body.push(` ${t.bold}${t.green}Money${t.reset}  ${t.faint}mode ${money.mode}${t.reset}`)
+  body.push(` ${t.bold}${t.green}API cost${t.reset}`)
   body.push(
-    ` ${t.faint}list   ${t.reset}${formatUsd(money.listCost)}` +
-      `   ${t.faint}in ${t.reset}${formatUsd(u.cost.inputCost)}` +
-      `   ${t.faint}out ${t.reset}${formatUsd(u.cost.outputCost)}`,
-  )
-  body.push(
-    ` ${t.faint}firm sub ${t.reset}${t.yellow}${formatUsd(money.firmSubsidy)}${t.reset}` +
-      `   ${t.faint}you pay ${t.reset}${t.cyan}${formatUsd(money.userPay)}${t.reset}`,
+    ` ${t.faint}input  ${t.reset}${formatUsd(u.cost.inputCost)}` +
+      `   ${t.faint}output ${t.reset}${formatUsd(u.cost.outputCost)}` +
+      `   ${t.bold}${t.green}total ${formatUsd(u.cost.totalCost)}${t.reset}`,
   )
 
   if (u.byModel.length > 1) {
@@ -762,21 +771,17 @@ function renderHelp(state: State): string[] {
     ` ${t.muted}Run with:  npx @wiktorekdev/gburn${t.reset}`,
     "",
     ` ${t.bold}Keys${t.reset}`,
-    row("↑ ↓ / j k", "move selection"),
-    row("Enter", "open session detail"),
+    row("↑ ↓ / j k", "move"),
+    row("click", "select row"),
+    row("dbl-click", "open detail"),
+    row("wheel", "scroll"),
+    row("Enter", "open detail"),
     row("/  f", "search"),
-    row("s", "cycle sort"),
-    row("p", "pricing table"),
-    row("m", "usage by model"),
+    row("s", "sort"),
+    row("p", "prices"),
+    row("m", "by model"),
     row("r", "rescan"),
-    row("g / G", "top / bottom"),
-    row("?", "help"),
     row("q", "quit"),
-    "",
-    ` ${t.bold}Estimation${t.reset}`,
-    ` ${t.faint}input  = totalTokens at each model stream start${t.reset}`,
-    ` ${t.faint}output = growth on agent events${t.reset}`,
-    ` ${t.faint}?      = rough signals.json fallback${t.reset}`,
     "",
   ])
 }
@@ -856,6 +861,10 @@ export async function runTui(
     searching: false,
     detailScroll: 0,
     detailMaxScroll: 0,
+    listTopRow: 6,
+    listH: 10,
+    lastClickAt: 0,
+    lastClickIndex: -1,
     ...termSize(),
   }
   applyFilter(state)
@@ -869,11 +878,6 @@ export async function runTui(
   process.stdin.setRawMode(true)
   process.stdin.resume()
   process.stdin.setEncoding("utf8")
-  // drop any pending input (e.g. leftover ink/mouse garbage)
-  if (typeof process.stdin.setRawMode === "function") {
-    process.stdin.pause()
-    process.stdin.resume()
-  }
 
   let closed = false
   const cleanup = () => {
@@ -899,7 +903,123 @@ export async function runTui(
   draw(state)
 
   await new Promise<void>((resolve) => {
-    const onData = async (key: string) => {
+    let buf = ""
+
+    const handleMouse = (mouse: {
+      btn: number
+      x: number
+      y: number
+      release: boolean
+    }) => {
+      if (mouse.release) return
+
+      // wheel: 64 up, 65 down (SGR)
+      if (mouse.btn === 64) {
+        if (state.view === "list") {
+          state.selected = Math.max(0, state.selected - 1)
+        } else {
+          state.detailScroll = Math.max(0, state.detailScroll - 1)
+        }
+        draw(state)
+        return
+      }
+      if (mouse.btn === 65) {
+        if (state.view === "list") {
+          state.selected = Math.min(
+            Math.max(0, state.sessions.length - 1),
+            state.selected + 1,
+          )
+        } else {
+          state.detailScroll = Math.min(
+            state.detailMaxScroll,
+            state.detailScroll + 1,
+          )
+        }
+        draw(state)
+        return
+      }
+
+      // left click
+      if (mouse.btn === 0 && state.view === "list" && !state.searching) {
+        const rowInList = mouse.y - state.listTopRow
+        if (rowInList >= 0 && rowInList < state.listH) {
+          const idx = state.scroll + rowInList
+          if (idx >= 0 && idx < state.sessions.length) {
+            const now = Date.now()
+            const dbl =
+              idx === state.lastClickIndex && now - state.lastClickAt < 400
+            state.selected = idx
+            state.lastClickAt = now
+            state.lastClickIndex = idx
+            if (dbl) {
+              state.view = "detail"
+              state.detailScroll = 0
+            }
+            draw(state)
+          }
+        }
+        return
+      }
+
+      // click outside list in detail = ignore; optional: future footer buttons
+    }
+
+    const onData = async (chunk: string) => {
+      if (closed) return
+      buf += chunk
+
+      // drain complete mouse sequences and key events from buffer
+      while (buf.length > 0) {
+        // SGR mouse
+        if (buf.startsWith("\x1b[<")) {
+          const end = buf.search(/[Mm]/)
+          if (end === -1) return // incomplete
+          const seq = buf.slice(0, end + 1)
+          buf = buf.slice(end + 1)
+          const mouse = parseMouse(seq)
+          if (mouse) handleMouse(mouse)
+          continue
+        }
+
+        // CSI sequences (arrows, pages)
+        if (buf.startsWith("\x1b[")) {
+          // need full CSI: ESC [ ... letter
+          const m = buf.match(/^\x1b\[[0-9;]*[A-Za-z~]/)
+          if (!m) {
+            if (buf.length > 16) buf = buf.slice(1)
+            return
+          }
+          const key = m[0]
+          buf = buf.slice(key.length)
+          await handleKey(key)
+          continue
+        }
+
+        if (buf.startsWith("\x1b")) {
+          // bare esc or incomplete
+          if (buf.length === 1) {
+            // wait a tick for multi-byte; if alone, treat as esc
+            setTimeout(() => {
+              if (buf === "\x1b") {
+                buf = ""
+                void handleKey("\x1b")
+              }
+            }, 20)
+            return
+          }
+          const key = buf[0]
+          buf = buf.slice(1)
+          await handleKey(key)
+          continue
+        }
+
+        const key = buf[0]
+        buf = buf.slice(1)
+        await handleKey(key)
+      }
+    }
+
+    const handleKey = async (key: string) => {
       if (closed) return
 
       if (key === "\u0003") {
@@ -1018,17 +1138,12 @@ export async function runTui(
 
 export function printSummary(scan: ScanResult) {
   const totals = scan.totals
-  const money = moneySplit(totals.totalCost)
-  console.log(
-    `${t.bold}${t.accent}◆ gburn${t.reset}  ${t.muted}list · firm subsidy (${money.mode})${t.reset}`,
-  )
+  console.log(`${t.bold}${t.accent}◆ gburn${t.reset}  ${t.muted}grok build · api cost${t.reset}`)
   console.log(`${t.faint}${scan.sessionsDir}${t.reset}`)
   console.log()
   console.log(
     `${t.faint}sessions${t.reset} ${totals.sessions}` +
-      `  ${t.faint}list${t.reset} ${t.green}${formatUsd(money.listCost)}${t.reset}` +
-      `  ${t.faint}sub${t.reset} ${t.yellow}${formatUsd(money.firmSubsidy)}${t.reset}` +
-      `  ${t.faint}you${t.reset} ${t.cyan}${formatUsd(money.userPay)}${t.reset}`,
+      `  ${t.faint}cost${t.reset} ${t.green}${formatUsd(totals.totalCost)}${t.reset}`,
   )
   console.log(
     `${t.faint}tokens${t.reset}  ${t.cyan}in ${formatTokens(totals.inputTokens)}${t.reset}` +
@@ -1039,7 +1154,7 @@ export function printSummary(scan: ScanResult) {
 
   const rows = sortSessions(scan.sessions, "cost", true).slice(0, 25)
   console.log(
-    pad("LIST", 10, "right") +
+    pad("COST", 10, "right") +
       pad("INPUT", 10, "right") +
       pad("OUTPUT", 10, "right") +
       "  " +
@@ -1061,7 +1176,7 @@ export function printSummary(scan: ScanResult) {
     )
   }
   if (scan.sessions.length > 25) {
-    console.log(`${t.faint}... +${scan.sessions.length - 25} more${t.reset}`)
+    console.log(`${t.faint}… +${scan.sessions.length - 25} more${t.reset}`)
   }
   console.log()
   console.log(`${t.faint}npx @wiktorekdev/gburn  · ${PRICING_SOURCE}${t.reset}`)
@@ -1069,10 +1184,8 @@ export function printSummary(scan: ScanResult) {
 
 export function printJson(scan: ScanResult) {
   const ordered = sortSessions(scan.sessions, "cost", true)
-  const money = moneySplit(scan.totals.totalCost)
   const payload = {
     scannedAt: scan.scannedAt,
-    billing: money,
     grokHome: scan.grokHome,
     sessionsDir: scan.sessionsDir,
     pricingSource: PRICING_SOURCE,

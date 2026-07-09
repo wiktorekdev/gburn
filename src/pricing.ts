@@ -14,34 +14,6 @@ export type ModelPrice = {
   note?: string
 }
 
-/** How to frame money columns.
- *  sub = flat plan (SuperGrok / included usage): list cost is firm subsidy
- *  api = you pay list rates; subsidy is 0
- */
-export type BillingMode = "sub" | "api"
-
-export function billingMode(): BillingMode {
-  const v = (process.env.GBURN_BILLING || "sub").toLowerCase()
-  return v === "api" ? "api" : "sub"
-}
-
-export type MoneySplit = {
-  listCost: number
-  /** What the firm/plan covers if you are not on pure API billing */
-  firmSubsidy: number
-  /** What you would pay out of pocket at list rates under current mode */
-  userPay: number
-  mode: BillingMode
-}
-
-export function moneySplit(listCost: number, mode: BillingMode = billingMode()): MoneySplit {
-  if (mode === "api") {
-    return { listCost, firmSubsidy: 0, userPay: listCost, mode }
-  }
-  // subscription / included usage: firm eats the list-price burn
-  return { listCost, firmSubsidy: listCost, userPay: 0, mode }
-}
-
 /** Models that appear in Grok Build (region-dependent). */
 export const OFFICIAL_PRICES: ModelPrice[] = [
   {
@@ -107,12 +79,10 @@ export function resolvePrice(modelId: string | null | undefined): ModelPrice {
   if (key.startsWith("grok-build")) return byId.get("grok-build")!
   if (key.startsWith("grok-4.5")) return byId.get("grok-4.5")!
 
-  // Composer: Build almost always uses Fast outside US
   if (key.includes("composer")) {
     if (key.includes("standard") && !key.includes("fast")) {
       return byId.get("grok-composer-2.5")!
     }
-    // default / fast / bare composer id → Fast rates
     return byId.get("grok-composer-2.5-fast")!
   }
 
@@ -134,7 +104,6 @@ export function calcCost(
 ): CostBreakdown {
   const price = resolvePrice(modelId)
   const priced = price.inputPerM > 0 || price.outputPerM > 0
-  // Grok Build: bill at public API input/output rates (no cache split in logs)
   const inputCost = (inputTokens / 1_000_000) * price.inputPerM
   const outputCost = (outputTokens / 1_000_000) * price.outputPerM
   return {

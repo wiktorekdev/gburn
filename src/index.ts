@@ -6,7 +6,7 @@ import { runTui, printSummary, printJson } from "./tui"
 const NAME = "gburn"
 
 function printHelp() {
-  console.log(`${NAME} - Grok Build token burn, list price and firm subsidy
+  console.log(`${NAME} - Grok Build token burn at public API list prices
 
 Usage:
   npx @wiktorekdev/gburn

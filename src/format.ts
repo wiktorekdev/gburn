@@ -32,8 +32,8 @@ export function formatDuration(seconds: number | null | undefined): string {
 
 export function truncate(s: string, max: number): string {
   if (s.length <= max) return s
-  if (max <= 1) return "..."
-  return s.slice(0, max - 1) + "..."
+  if (max <= 1) return "…"
+  return s.slice(0, max - 1) + "…"
 }
 
 export function shortPath(p: string, max = 48): string {
@@ -42,7 +42,7 @@ export function shortPath(p: string, max = 48): string {
   if (normalized.length <= max) return normalized
   const parts = normalized.split("\\").filter(Boolean)
   if (parts.length <= 2) return truncate(normalized, max)
-  return truncate(`...\\${parts.slice(-2).join("\\")}`, max)
+  return truncate(`…\\${parts.slice(-2).join("\\")}`, max)
 }
 
 export function pad(s: string, width: number, align: "left" | "right" = "left"): string {
