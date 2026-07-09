@@ -74,6 +74,14 @@ bun run build
 
 TUI: custom TypeScript + ANSI (no React/Ink).
 
+### Release (auto npm)
+
+1. Bump `version` in `package.json`
+2. Push to `main`
+3. Create a GitHub Release (`v1.0.1` etc.)
+
+GitHub Action publishes to npm. Needs repo secret `NPM_TOKEN` (npm access token, Automation type).
+
 ## License
 
 [MIT](./LICENSE) © wiktorekdev

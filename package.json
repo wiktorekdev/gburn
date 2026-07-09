@@ -1,6 +1,6 @@
 {
   "name": "@wiktorekdev/gburn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "See how much your Grok Build sessions would cost at public API list prices. Fullscreen TUI.",
   "type": "module",
   "bin": {
