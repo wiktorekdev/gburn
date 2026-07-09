@@ -1,0 +1,101 @@
+# gburn
+
+<p align="center">
+  <strong>Grok Build burn rate</strong> — see how much your sessions would cost at public API list prices.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/gburn"><img src="https://img.shields.io/npm/v/gburn.svg?style=flat-square&color=cb3837" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/gburn"><img src="https://img.shields.io/npm/dm/gburn.svg?style=flat-square&color=blue" alt="npm downloads" /></a>
+  <a href="https://github.com/wiktorekdev/gburn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/gburn.svg?style=flat-square" alt="license" /></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/gburn.svg?style=flat-square&color=brightgreen" alt="node" /></a>
+  <a href="https://github.com/wiktorekdev/gburn"><img src="https://img.shields.io/github/stars/wiktorekdev/gburn?style=flat-square" alt="stars" /></a>
+</p>
+
+<p align="center">
+  <code>bunx gburn</code> &nbsp;·&nbsp; <code>npx gburn</code>
+</p>
+
+---
+
+Fullscreen TUI that reads **local** Grok Build sessions (`~/.grok/sessions`) and estimates token spend + list-price cost for:
+
+| Model | Typical region | List price (in / out per 1M) |
+|-------|----------------|------------------------------|
+| **Grok 4.5** | USA default | $2 / $6 (xAI) |
+| **Composer 2.5 Fast** | rest of world default | $3 / $15 (Cursor) |
+| **grok-build** | some regions (e.g. EU) | $1 / $2 (xAI Code API) |
+
+Nothing is uploaded. No account required. Zero runtime dependencies.
+
+## Install
+
+```bash
+# one-shot
+bunx gburn
+npx gburn
+
+# global
+npm i -g gburn
+bun add -g gburn
+```
+
+## Usage
+
+```bash
+gburn                 # fullscreen TUI
+gburn --summary       # text table
+gburn --json          # machine-readable
+gburn --cwd ideas     # filter by project path
+gburn --home D:\grok  # custom GROK_HOME
+```
+
+### Keys
+
+| Key | Action |
+|-----|--------|
+| `↑` `↓` / `j` `k` | Move |
+| `Enter` | Session detail |
+| `/` | Search |
+| `s` | Cycle sort |
+| `p` | Pricing table |
+| `m` | Usage by model |
+| `r` | Rescan |
+| `q` | Quit |
+
+## How it works
+
+```
+~/.grok/sessions/<project>/<session-id>/
+  summary.json
+  updates.jsonl      → token streams
+  chat_history.jsonl → real model ids
+  signals.json
+  subagents/*/meta.json
+```
+
+- **input** ≈ `totalTokens` at each model stream start  
+- **output** ≈ growth on agent events  
+- **model** from assistant messages in `chat_history` (not flaky session primary)  
+- **multi-model** sessions split by message share  
+- **subagents** linked parent ↔ child  
+
+Empty sessions are hidden.
+
+> Hypothetical list-price cost — not SuperGrok / Cursor subscription billing.
+
+## Dev
+
+```bash
+git clone https://github.com/wiktorekdev/gburn.git
+cd gburn
+bun install   # optional — no deps required to run from source with Bun
+bun start
+bun run build
+```
+
+Requires [Bun](https://bun.sh) or Node 18+ for the published CLI.
+
+## License
+
+[MIT](./LICENSE) © wiktorekdev

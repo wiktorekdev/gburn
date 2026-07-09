@@ -1,0 +1,49 @@
+{
+  "name": "gburn",
+  "version": "1.0.0",
+  "description": "See how much your Grok Build sessions would cost at public API list prices. Fullscreen TUI.",
+  "type": "module",
+  "bin": {
+    "gburn": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun build src/index.ts --outfile dist/cli.js --target node --format esm && node scripts/postbuild-bin.mjs",
+    "start": "bun run src/index.ts",
+    "dev": "bun run src/index.ts",
+    "summary": "bun run src/index.ts --summary",
+    "json": "bun run src/index.ts --json",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "grok",
+    "grok-build",
+    "xai",
+    "cursor",
+    "composer",
+    "tokens",
+    "cost",
+    "usage",
+    "tui",
+    "cli",
+    "gburn"
+  ],
+  "author": "wiktorekdev",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wiktorekdev/gburn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wiktorekdev/gburn/issues"
+  },
+  "homepage": "https://github.com/wiktorekdev/gburn#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "preferGlobal": true
+}
