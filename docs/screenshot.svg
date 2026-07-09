@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#12141a"/>
+      <stop offset="100%" stop-color="#0e0e12"/>
+    </linearGradient>
+  </defs>
+  <rect width="1100" height="640" rx="12" fill="url(#bg)"/>
+  <rect x="1" y="1" width="1098" height="638" rx="11" fill="none" stroke="#3a3f50" stroke-width="1"/>
+
+  <text x="20" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#78d2ff">◆ gburn</text>
+  <text x="105" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#9aa0b0">grok build · api cost</text>
+  <text x="1080" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#9aa0b0" text-anchor="end">10 sessions</text>
+
+  <text x="20" y="50" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">
+    <tspan fill="#9aa0b0">COST </tspan><tspan fill="#64f0a0" font-weight="700">$226.75</tspan>
+    <tspan fill="#3a3f50">  │  </tspan>
+    <tspan fill="#9aa0b0">IN </tspan><tspan fill="#6eebfa">110.7M</tspan>
+    <tspan fill="#3a3f50">  │  </tspan>
+    <tspan fill="#9aa0b0">OUT </tspan><tspan fill="#dca0ff">917k</tspan>
+    <tspan fill="#3a3f50">  │  </tspan>
+    <tspan fill="#9aa0b0">OK </tspan><tspan fill="#ffd75a">10/10</tspan>
+  </text>
+
+  <line x1="20" y1="62" x2="1080" y2="62" stroke="#3a3f50" stroke-width="1"/>
+
+  <text x="42" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#9aa0b0" font-weight="700">COST</text>
+  <text x="185" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#9aa0b0" font-weight="700">INPUT</text>
+  <text x="255" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#9aa0b0" font-weight="700">OUTPUT</text>
+  <text x="320" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#9aa0b0" font-weight="700">TRN</text>
+  <text x="355" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#9aa0b0" font-weight="700">MODEL</text>
+  <text x="430" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#9aa0b0" font-weight="700">WHEN</text>
+  <text x="535" y="82" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#9aa0b0" font-weight="700">TITLE</text>
+  <line x1="20" y1="90" x2="1080" y2="90" stroke="#2a2e3a" stroke-width="1"/>
+
+  <rect x="20" y="93" width="1060" height="22" fill="#285582" rx="3"/>
+<text x="28" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">▌</text>
+<text x="42" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600"> $147.69</text>
+<rect x="120" y="99" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="99" width="56" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  72.7M</text>
+<text x="300" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">   379k</text>
+<text x="340" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end"> 78</text>
+<text x="355" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 17:52</text>
+<text x="535" y="108" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">Landing page redesign · conversion layout</text>
+
+<text x="28" y="130" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="130" fill="#ffd75a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">  $32.49</text>
+<rect x="120" y="121" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="121" width="12" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="130" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  15.8M</text>
+<text x="300" y="130" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">   161k</text>
+<text x="340" y="130" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end"> 18</text>
+<text x="355" y="130" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="130" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 21:34</text>
+<text x="535" y="130" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">Internal metrics dashboard + charts</text>
+
+<text x="28" y="152" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="152" fill="#ffd75a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">  $24.47</text>
+<rect x="120" y="143" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="143" width="10" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="152" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  11.8M</text>
+<text x="300" y="152" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">   140k</text>
+<text x="340" y="152" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end"> 12</text>
+<text x="355" y="152" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="152" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 20:55</text>
+<text x="535" y="152" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">Game web port · runtime fidelity [2 sub]</text>
+
+<text x="28" y="174" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="174" fill="#ffd75a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">  $13.03</text>
+<rect x="120" y="165" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="165" width="5" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="174" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  6.33M</text>
+<text x="300" y="174" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  59.7k</text>
+<text x="340" y="174" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  7</text>
+<text x="355" y="174" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="174" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 18:51</text>
+<text x="535" y="174" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">PR review pass on auth middleware</text>
+
+<text x="28" y="196" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="196" fill="#ffd75a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">   $5.08</text>
+<rect x="120" y="187" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="187" width="2" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="196" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  2.31M</text>
+<text x="300" y="196" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  74.7k</text>
+<text x="340" y="196" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  1</text>
+<text x="355" y="196" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="196" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 20:41</text>
+<text x="535" y="196" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">↳ Asset extraction pass</text>
+
+<text x="28" y="218" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="218" fill="#ffd75a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">   $2.70</text>
+<rect x="120" y="209" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="209" width="1" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="218" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  1.17M</text>
+<text x="300" y="218" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  61.2k</text>
+<text x="340" y="218" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  1</text>
+<text x="355" y="218" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="218" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 20:39</text>
+<text x="535" y="218" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">↳ Runtime polish + input mapping</text>
+
+<text x="28" y="240" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="240" fill="#ffd75a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">   $1.07</text>
+<rect x="120" y="231" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="231" width="1" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="240" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">   490k</text>
+<text x="300" y="240" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  15.3k</text>
+<text x="340" y="240" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  5</text>
+<text x="355" y="240" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="240" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 13:48</text>
+<text x="535" y="240" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">Scaffold CLI for log parsing</text>
+
+<text x="28" y="262" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="262" fill="#64f0a0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">   $0.11</text>
+<rect x="120" y="253" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="253" width="0" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="262" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  26.0k</text>
+<text x="300" y="262" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  10.1k</text>
+<text x="340" y="262" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  1</text>
+<text x="355" y="262" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">4.5      </text>
+<text x="430" y="262" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 13:41</text>
+<text x="535" y="262" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">Brainstorm side-project ideas</text>
+
+<text x="28" y="284" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="284" fill="#64f0a0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">   $0.07</text>
+<rect x="120" y="275" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="275" width="0" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="284" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  49.6k</text>
+<text x="300" y="284" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  11.8k</text>
+<text x="340" y="284" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  3</text>
+<text x="355" y="284" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">build    </text>
+<text x="430" y="284" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 14:36</text>
+<text x="535" y="284" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">Debug DNS on home lab DNS box</text>
+
+<text x="28" y="306" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13"> </text>
+<text x="42" y="306" fill="#64f0a0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="600">   $0.04</text>
+<rect x="120" y="297" width="56" height="10" fill="#2a2e3a" rx="2"/><rect x="120" y="297" width="0" height="10" fill="#64f0a0" opacity="0.85" rx="2"/>
+<text x="230" y="306" fill="#6eebfa" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  10.0k</text>
+<text x="300" y="306" fill="#dca0ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">   2.4k</text>
+<text x="340" y="306" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" text-anchor="end">  1</text>
+<text x="355" y="306" fill="#64afe6" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">composer </text>
+<text x="430" y="306" fill="#9aa0b0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">07-09 17:53</text>
+<text x="535" y="306" fill="#ebebf2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">Quick edit on README badges</text>
+
+  <rect x="20" y="530" width="1060" height="72" rx="6" fill="#141820" stroke="#3a3f50"/>
+  <text x="34" y="555" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">
+    <tspan fill="#9aa0b0">▸ </tspan>
+    <tspan fill="#ffffff" font-weight="700">Landing page redesign · conversion layout</tspan>
+    <tspan fill="#ffd75a" font-weight="700">   $147.69</tspan>
+  </text>
+  <text x="34" y="576" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#9aa0b0">4.5 · 2026-07-09 17:52 · 78 turns · 710 tools · ~/dev/acme-landing</text>
+  <text x="34" y="596" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12">
+    <tspan fill="#6eebfa">in 72.7M</tspan>
+    <tspan fill="#dca0ff">  out 379k</tspan>
+    <tspan fill="#9aa0b0">  · 195 streams · detailed · $2/$6 per 1M</tspan>
+  </text>
+
+  <text x="20" y="624" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#9aa0b0">↑↓ move  ↵ open  / find  s sort  p price  m models  q quit</text>
+  <text x="1080" y="624" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#9aa0b0" text-anchor="end">sort cost ↓</text>
+</svg>

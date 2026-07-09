@@ -16,6 +16,12 @@
   <code>npx @wiktorekdev/gburn</code> &nbsp;·&nbsp; <code>bunx @wiktorekdev/gburn</code>
 </p>
 
+<p align="center">
+  <img src="docs/screenshot.svg" alt="gburn TUI screenshot" width="900" />
+</p>
+
+<p align="center"><sub>Demo data — no real usernames or absolute paths.</sub></p>
+
 ---
 
 Fullscreen TUI that reads **local** Grok Build sessions (`~/.grok/sessions`) and estimates token spend + list-price cost for:
@@ -46,6 +52,7 @@ bun add -g @wiktorekdev/gburn
 gburn                 # fullscreen TUI (after global install)
 gburn --summary       # text table
 gburn --json          # machine-readable
+gburn --demo          # fake sample sessions (safe screenshots)
 gburn --cwd ideas     # filter by project path
 gburn --home D:\grok  # custom GROK_HOME
 ```

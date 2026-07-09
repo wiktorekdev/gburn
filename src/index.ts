@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { scanSessions } from "./scanner"
+import { demoScan } from "./demo"
 import { runTui, printSummary, printJson } from "./tui"
 
 const NAME = "gburn"
@@ -15,6 +16,7 @@ Usage:
 Options:
   --summary, -s     Text summary (no TUI)
   --json, -j        JSON report
+  --demo            Fake sample sessions (safe for screenshots)
   --cwd <path>      Filter by project path
   --home <path>     Override GROK_HOME (default: ~/.grok)
   --help, -h        Show help
@@ -46,16 +48,22 @@ async function main() {
 
   const wantJson = args.includes("--json") || args.includes("-j")
   const wantSummary = args.includes("--summary") || args.includes("-s")
+  const wantDemo = args.includes("--demo")
 
-  const doScan = () => scanSessions({ grokHome, onlyCwd })
+  const doScan = wantDemo
+    ? async () => demoScan()
+    : () => scanSessions({ grokHome, onlyCwd })
 
   const interactive =
     !wantJson &&
     !wantSummary &&
     Boolean(process.stdin.isTTY && process.stdout.isTTY)
 
-  if (!wantJson && !interactive) {
+  if (!wantJson && !interactive && !wantDemo) {
     console.error("Scanning Grok Build sessions…")
+  }
+  if (wantDemo && !interactive) {
+    console.error("Using demo sample data…")
   }
 
   const scan = await doScan()
