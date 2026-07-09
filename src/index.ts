@@ -16,7 +16,6 @@ Usage:
 Options:
   --summary, -s     Text summary (no TUI)
   --json, -j        JSON report
-  --demo            Fake sample sessions (safe for screenshots)
   --cwd <path>      Filter by project path
   --home <path>     Override GROK_HOME (default: ~/.grok)
   --help, -h        Show help
@@ -29,7 +28,6 @@ TUI keys:
   q          quit
 
 Reads local sessions from ~/.grok/sessions
-Prices from https://docs.x.ai/developers/pricing
 `)
 }
 
@@ -48,7 +46,8 @@ async function main() {
 
   const wantJson = args.includes("--json") || args.includes("-j")
   const wantSummary = args.includes("--summary") || args.includes("-s")
-  const wantDemo = args.includes("--demo")
+  // hidden: GBURN_DEMO=1 → sample sessions for screenshots (not a public flag)
+  const wantDemo = process.env.GBURN_DEMO === "1" || process.env.GBURN_DEMO === "true"
 
   const doScan = wantDemo
     ? async () => demoScan()
@@ -61,9 +60,6 @@ async function main() {
 
   if (!wantJson && !interactive && !wantDemo) {
     console.error("Scanning Grok Build sessions…")
-  }
-  if (wantDemo && !interactive) {
-    console.error("Using demo sample data…")
   }
 
   const scan = await doScan()

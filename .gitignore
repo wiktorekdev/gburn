@@ -4,5 +4,6 @@ dist/
 .DS_Store
 .env
 tmp-out.json
-*.backup.ts
+*.tmp
 tui.custom.backup.ts
+docs/screenshot.svg

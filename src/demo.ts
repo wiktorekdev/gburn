@@ -2,7 +2,7 @@ import type { ScanResult, SessionRecord } from "./scanner"
 import { computeTotals } from "./scanner"
 import { calcCost } from "./pricing"
 
-function session( partial: {
+function session(partial: {
   id: string
   title: string
   cwd: string
@@ -15,6 +15,7 @@ function session( partial: {
   isSubagent?: boolean
   parentSessionId?: string
   childSessionIds?: string[]
+  agentName?: string
 }): SessionRecord {
   const cost = calcCost(partial.modelId, partial.input, partial.output)
   return {
@@ -34,7 +35,7 @@ function session( partial: {
     contextTokensUsed: Math.min(partial.input, 280_000),
     contextWindowTokens: 500_000,
     sessionDurationSeconds: partial.turns * 180,
-    agentName: "grok-build-plan",
+    agentName: partial.agentName ?? "grok-build-plan",
     reasoningEffort: "high",
     usage: {
       inputTokens: partial.input,
@@ -60,18 +61,18 @@ function session( partial: {
     parentSessionId: partial.parentSessionId ?? null,
     childSessionIds: partial.childSessionIds ?? [],
     subagentType: partial.isSubagent ? "general-purpose" : null,
-    subagentDescription: partial.isSubagent ? "demo subagent" : null,
+    subagentDescription: partial.isSubagent ? "nested chaos" : null,
   }
 }
 
-/** Fake sessions for screenshots / demos — no real paths or usernames. */
+/** Sample sessions for GBURN_DEMO=1 — funny titles, no real paths. */
 export function demoScan(): ScanResult {
-  const parentId = "demo-parent-web-port"
+  const parentId = "demo-nest-parent"
   const sessions: SessionRecord[] = [
     session({
-      id: "demo-landing-redesign",
-      title: "Landing page redesign · conversion layout",
-      cwd: "~/dev/acme-landing",
+      id: "demo-hello",
+      title: 'helloworld("print") — why is this in production',
+      cwd: "~/dev/hello-again",
       modelId: "grok-4.5",
       input: 72_700_000,
       output: 379_000,
@@ -80,9 +81,9 @@ export function demoScan(): ScanResult {
       when: "2026-07-09T17:52:00Z",
     }),
     session({
-      id: "demo-api-dashboard",
-      title: "Internal metrics dashboard + charts",
-      cwd: "~/dev/ops-dashboard",
+      id: "demo-antigravity",
+      title: "import antigravity  # it worked on my machine",
+      cwd: "~/dev/space-cadet",
       modelId: "grok-4.5",
       input: 15_800_000,
       output: 161_000,
@@ -92,20 +93,20 @@ export function demoScan(): ScanResult {
     }),
     session({
       id: parentId,
-      title: "Game web port · runtime fidelity [2 sub]",
-      cwd: "~/dev/game-web-port",
+      title: "refactor while true: coffee()  [2 sub]",
+      cwd: "~/dev/caffeine-os",
       modelId: "grok-4.5",
       input: 11_800_000,
       output: 140_000,
       turns: 12,
       tools: 95,
       when: "2026-07-09T20:55:00Z",
-      childSessionIds: ["demo-sub-re", "demo-sub-runtime"],
+      childSessionIds: ["demo-sub-1", "demo-sub-2"],
     }),
     session({
-      id: "demo-pr-review",
-      title: "PR review pass on auth middleware",
-      cwd: "~/dev/saas-api",
+      id: "demo-friday",
+      title: "deploy to prod on friday (send help)",
+      cwd: "~/dev/yolo-ship",
       modelId: "grok-4.5",
       input: 6_330_000,
       output: 59_700,
@@ -114,9 +115,9 @@ export function demoScan(): ScanResult {
       when: "2026-07-09T18:51:00Z",
     }),
     session({
-      id: "demo-sub-re",
-      title: "↳ Asset extraction pass",
-      cwd: "~/dev/game-web-port",
+      id: "demo-sub-1",
+      title: "↳ undefined is not a function (again)",
+      cwd: "~/dev/caffeine-os",
       modelId: "grok-4.5",
       input: 2_310_000,
       output: 74_700,
@@ -127,9 +128,9 @@ export function demoScan(): ScanResult {
       parentSessionId: parentId,
     }),
     session({
-      id: "demo-sub-runtime",
-      title: "↳ Runtime polish + input mapping",
-      cwd: "~/dev/game-web-port",
+      id: "demo-sub-2",
+      title: "↳ CSS is awesome (center the div)",
+      cwd: "~/dev/caffeine-os",
       modelId: "grok-4.5",
       input: 1_170_000,
       output: 61_200,
@@ -140,9 +141,9 @@ export function demoScan(): ScanResult {
       parentSessionId: parentId,
     }),
     session({
-      id: "demo-cli-tool",
-      title: "Scaffold CLI for log parsing",
-      cwd: "~/dev/logparse-cli",
+      id: "demo-git",
+      title: 'git commit -m "fix"  (it was not a fix)',
+      cwd: "~/dev/honest-commits",
       modelId: "grok-4.5",
       input: 490_000,
       output: 15_300,
@@ -151,8 +152,8 @@ export function demoScan(): ScanResult {
       when: "2026-07-09T13:48:00Z",
     }),
     session({
-      id: "demo-ideas",
-      title: "Brainstorm side-project ideas",
+      id: "demo-todo",
+      title: "TODO: delete this TODO",
       cwd: "~/notes",
       modelId: "grok-4.5",
       input: 26_000,
@@ -162,8 +163,8 @@ export function demoScan(): ScanResult {
       when: "2026-07-09T13:41:00Z",
     }),
     session({
-      id: "demo-dns-fix",
-      title: "Debug DNS on home lab DNS box",
+      id: "demo-build",
+      title: "sudo make me a sandwich",
       cwd: "~/infra/homelab",
       modelId: "grok-build",
       input: 49_600,
@@ -171,10 +172,11 @@ export function demoScan(): ScanResult {
       turns: 3,
       tools: 12,
       when: "2026-07-09T14:36:00Z",
+      agentName: "grok-build",
     }),
     session({
       id: "demo-composer",
-      title: "Quick edit on README badges",
+      title: "console.log('why') // still here",
       cwd: "~/dev/docs-site",
       modelId: "grok-composer-2.5-fast",
       input: 10_000,
@@ -185,10 +187,9 @@ export function demoScan(): ScanResult {
     }),
   ]
 
-  // strip [2 sub] from title storage — display uses childSessionIds
   const fixed = sessions.map((s) =>
     s.id === parentId
-      ? { ...s, title: "Game web port · runtime fidelity" }
+      ? { ...s, title: "refactor while true: coffee()" }
       : s,
   )
 
@@ -197,6 +198,6 @@ export function demoScan(): ScanResult {
     sessionsDir: "~/.grok/sessions",
     sessions: fixed,
     totals: computeTotals(fixed),
-    scannedAt: "2026-07-09T21:40:00.000Z",
+    scannedAt: new Date().toISOString(),
   }
 }

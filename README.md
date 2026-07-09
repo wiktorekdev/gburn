@@ -1,7 +1,7 @@
 # gburn
 
 <p align="center">
-  <strong>Grok Build burn rate</strong> — see how much your sessions would cost at public API list prices.
+  <strong>Grok Build burn rate</strong> — session tokens & API list-price cost, in a fullscreen TUI.
 </p>
 
 <p align="center">
@@ -16,45 +16,23 @@
   <code>npx @wiktorekdev/gburn</code> &nbsp;·&nbsp; <code>bunx @wiktorekdev/gburn</code>
 </p>
 
-<p align="center">
-  <img src="docs/screenshot.svg" alt="gburn TUI screenshot" width="900" />
-</p>
-
-<p align="center"><sub>Demo data — no real usernames or absolute paths.</sub></p>
-
----
-
-Fullscreen TUI that reads **local** Grok Build sessions (`~/.grok/sessions`) and estimates token spend + list-price cost for:
-
-| Model | Typical region | List price (in / out per 1M) |
-|-------|----------------|------------------------------|
-| **Grok 4.5** | USA default | $2 / $6 (xAI) |
-| **Composer 2.5 Fast** | rest of world default | $3 / $15 (Cursor) |
-| **grok-build** | some regions (e.g. EU) | $1 / $2 (xAI Code API) |
-
-Nothing is uploaded. No account required. Zero runtime dependencies.
-
 ## Install
 
 ```bash
-# one-shot
 npx @wiktorekdev/gburn
 bunx @wiktorekdev/gburn
 
-# global (CLI command: gburn)
-npm i -g @wiktorekdev/gburn
-bun add -g @wiktorekdev/gburn
+npm i -g @wiktorekdev/gburn   # → gburn
 ```
 
 ## Usage
 
 ```bash
-gburn                 # fullscreen TUI (after global install)
+gburn                 # TUI
 gburn --summary       # text table
-gburn --json          # machine-readable
-gburn --demo          # fake sample sessions (safe screenshots)
-gburn --cwd ideas     # filter by project path
-gburn --home D:\grok  # custom GROK_HOME
+gburn --json          # JSON
+gburn --cwd ideas     # filter project
+gburn --home ~/.grok  # custom GROK_HOME
 ```
 
 ### Keys
@@ -62,34 +40,23 @@ gburn --home D:\grok  # custom GROK_HOME
 | Key | Action |
 |-----|--------|
 | `↑` `↓` / `j` `k` | Move |
-| `Enter` | Session detail |
+| `Enter` | Detail |
 | `/` | Search |
-| `s` | Cycle sort |
-| `p` | Pricing table |
-| `m` | Usage by model |
+| `s` | Sort |
+| `p` | Prices |
+| `m` | By model |
 | `r` | Rescan |
 | `q` | Quit |
 
-## How it works
+## Pricing
 
-```
-~/.grok/sessions/<project>/<session-id>/
-  summary.json
-  updates.jsonl      → token streams
-  chat_history.jsonl → real model ids
-  signals.json
-  subagents/*/meta.json
-```
+| Model | $/1M in | $/1M out |
+|-------|---------|----------|
+| Grok 4.5 | $2 | $6 |
+| Composer 2.5 Fast | $3 | $15 |
+| grok-build | $1 | $2 |
 
-- **input** ≈ `totalTokens` at each model stream start  
-- **output** ≈ growth on agent events  
-- **model** from assistant messages in `chat_history` (not flaky session primary)  
-- **multi-model** sessions split by message share  
-- **subagents** linked parent ↔ child  
-
-Empty sessions are hidden.
-
-> Hypothetical list-price cost — not SuperGrok / Cursor subscription billing.
+Reads `~/.grok/sessions` (local only).
 
 ## Dev
 
@@ -99,8 +66,6 @@ cd gburn
 bun start
 bun run build
 ```
-
-Requires [Bun](https://bun.sh) or Node 18+ for the published CLI.
 
 ## License
 
