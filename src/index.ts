@@ -8,8 +8,8 @@ function printHelp() {
   console.log(`${NAME} — how much would your Grok Build sessions cost on the xAI API?
 
 Usage:
-  bunx ${NAME}
-  npx ${NAME}
+  npx @wiktorekdev/gburn
+  bunx @wiktorekdev/gburn
   ${NAME} [options]
 
 Options:

@@ -5,15 +5,15 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/gburn"><img src="https://img.shields.io/npm/v/gburn.svg?style=flat-square&color=cb3837" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/gburn"><img src="https://img.shields.io/npm/dm/gburn.svg?style=flat-square&color=blue" alt="npm downloads" /></a>
-  <a href="https://github.com/wiktorekdev/gburn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/gburn.svg?style=flat-square" alt="license" /></a>
-  <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/gburn.svg?style=flat-square&color=brightgreen" alt="node" /></a>
+  <a href="https://www.npmjs.com/package/@wiktorekdev/gburn"><img src="https://img.shields.io/npm/v/@wiktorekdev/gburn.svg?style=flat-square&color=cb3837" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@wiktorekdev/gburn"><img src="https://img.shields.io/npm/dm/@wiktorekdev/gburn.svg?style=flat-square&color=blue" alt="npm downloads" /></a>
+  <a href="https://github.com/wiktorekdev/gburn/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@wiktorekdev/gburn.svg?style=flat-square" alt="license" /></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/@wiktorekdev/gburn.svg?style=flat-square&color=brightgreen" alt="node" /></a>
   <a href="https://github.com/wiktorekdev/gburn"><img src="https://img.shields.io/github/stars/wiktorekdev/gburn?style=flat-square" alt="stars" /></a>
 </p>
 
 <p align="center">
-  <code>bunx gburn</code> &nbsp;·&nbsp; <code>npx gburn</code>
+  <code>npx @wiktorekdev/gburn</code> &nbsp;·&nbsp; <code>bunx @wiktorekdev/gburn</code>
 </p>
 
 ---
@@ -32,18 +32,18 @@ Nothing is uploaded. No account required. Zero runtime dependencies.
 
 ```bash
 # one-shot
-bunx gburn
-npx gburn
+npx @wiktorekdev/gburn
+bunx @wiktorekdev/gburn
 
-# global
-npm i -g gburn
-bun add -g gburn
+# global (CLI command: gburn)
+npm i -g @wiktorekdev/gburn
+bun add -g @wiktorekdev/gburn
 ```
 
 ## Usage
 
 ```bash
-gburn                 # fullscreen TUI
+gburn                 # fullscreen TUI (after global install)
 gburn --summary       # text table
 gburn --json          # machine-readable
 gburn --cwd ideas     # filter by project path
@@ -89,7 +89,6 @@ Empty sessions are hidden.
 ```bash
 git clone https://github.com/wiktorekdev/gburn.git
 cd gburn
-bun install   # optional — no deps required to run from source with Bun
 bun start
 bun run build
 ```

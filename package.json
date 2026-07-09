@@ -1,5 +1,5 @@
 {
-  "name": "gburn",
+  "name": "@wiktorekdev/gburn",
   "version": "1.0.0",
   "description": "See how much your Grok Build sessions would cost at public API list prices. Fullscreen TUI.",
   "type": "module",
@@ -45,5 +45,8 @@
   "engines": {
     "node": ">=18"
   },
-  "preferGlobal": true
+  "preferGlobal": true,
+  "publishConfig": {
+    "access": "public"
+  }
 }
