@@ -744,7 +744,7 @@ function renderHelp(state: State): string[] {
     "",
     ` ${t.bold}Display${t.reset}`,
     ` ${t.muted}Fullscreen alternate-screen TUI. Scrollback restored on quit.${t.reset}`,
-    ` ${t.muted}Run with:  bunx gburn   ·   npx gburn${t.reset}`,
+    ` ${t.muted}Run with:  npx @wiktorekdev/gburn${t.reset}`,
     "",
     ` ${t.bold}Keys${t.reset}`,
     row("↑ ↓ / j k", "move selection"),
@@ -1045,7 +1045,7 @@ export function printSummary(scan: ScanResult) {
     console.log(`${t.faint}… +${scan.sessions.length - 25} more${t.reset}`)
   }
   console.log()
-  console.log(`${t.faint}bunx gburn  → fullscreen TUI · ${PRICING_SOURCE}${t.reset}`)
+  console.log(`${t.faint}npx @wiktorekdev/gburn  · ${PRICING_SOURCE}${t.reset}`)
 }
 
 export function printJson(scan: ScanResult) {
