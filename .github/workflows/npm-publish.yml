@@ -24,15 +24,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
           scope: "@wiktorekdev"
 
       - name: Ensure npm supports OIDC
-        run: npm install -g npm@latest
+        run: |
+          npm install -g npm@11.5.1
+          npm --version
 
       - name: Build
         run: bun run build
 
       - name: Publish
         run: npm publish --access public
+        env:
+          # setup-node injects a dummy token; clear so OIDC is used
+          NODE_AUTH_TOKEN: ""
