@@ -1,6 +1,6 @@
 /** Prices for models that appear in Grok Build.
- *  Grok → official xAI API list prices
- *  Composer → Cursor list prices
+ *  Grok: official xAI API list prices
+ *  Composer: Cursor list prices
  */
 
 export type ModelPrice = {
@@ -8,10 +8,38 @@ export type ModelPrice = {
   label: string
   inputPerM: number
   outputPerM: number
-  /** Informational only — Grok Build logs don't expose cache hits reliably */
+  /** Informational only; logs do not expose cache hits reliably */
   cachedInputPerM?: number
   context?: string
   note?: string
+}
+
+/** How to frame money columns.
+ *  sub = flat plan (SuperGrok / included usage): list cost is firm subsidy
+ *  api = you pay list rates; subsidy is 0
+ */
+export type BillingMode = "sub" | "api"
+
+export function billingMode(): BillingMode {
+  const v = (process.env.GBURN_BILLING || "sub").toLowerCase()
+  return v === "api" ? "api" : "sub"
+}
+
+export type MoneySplit = {
+  listCost: number
+  /** What the firm/plan covers if you are not on pure API billing */
+  firmSubsidy: number
+  /** What you would pay out of pocket at list rates under current mode */
+  userPay: number
+  mode: BillingMode
+}
+
+export function moneySplit(listCost: number, mode: BillingMode = billingMode()): MoneySplit {
+  if (mode === "api") {
+    return { listCost, firmSubsidy: 0, userPay: listCost, mode }
+  }
+  // subscription / included usage: firm eats the list-price burn
+  return { listCost, firmSubsidy: listCost, userPay: 0, mode }
 }
 
 /** Models that appear in Grok Build (region-dependent). */

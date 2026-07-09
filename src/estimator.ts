@@ -69,7 +69,7 @@ function extractMeta(obj: Record<string, unknown>): {
   }
 }
 
-/** Stream-parse updates.jsonl (line by line — big sessions can be multi‑MB). */
+/** Stream-parse updates.jsonl (line by line - big sessions can be multi‑MB). */
 export async function estimateFromUpdatesAsync(
   updatesPath: string,
   primaryModelId: string | null,
@@ -174,7 +174,7 @@ export function estimateFromSignals(
     primaryModelId,
     modelWeights,
     estimationNote:
-      "Rough fallback from signals.json (peak context × turns). Output unknown — lower bound. Multi-model split by chat share when available.",
+      "Rough fallback from signals.json (peak context × turns). Output unknown - lower bound. Multi-model split by chat share when available.",
   })
 }
 

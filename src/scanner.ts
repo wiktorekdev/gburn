@@ -137,7 +137,7 @@ type SubagentMetaJson = {
   description?: string
 }
 
-/** Prefer model_id from actual assistant messages — signals.primaryModelId can be wrong. */
+/** Prefer model_id from actual assistant messages - signals.primaryModelId can be wrong. */
 async function resolveModelFromChat(chatPath: string): Promise<{
   primary: string | null
   counts: Map<string, number>

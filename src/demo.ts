@@ -65,7 +65,7 @@ function session(partial: {
   }
 }
 
-/** Sample sessions when GBURN_DEMO=1 — vibe-coding prompt energy. */
+/** Sample sessions when GBURN_DEMO=1 - vibe-coding prompt energy. */
 export function demoScan(): ScanResult {
   const parentId = "demo-gta-parent"
 

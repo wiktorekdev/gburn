@@ -6,7 +6,7 @@ import { runTui, printSummary, printJson } from "./tui"
 const NAME = "gburn"
 
 function printHelp() {
-  console.log(`${NAME} — how much would your Grok Build sessions cost on the xAI API?
+  console.log(`${NAME} - Grok Build token burn, list price and firm subsidy
 
 Usage:
   npx @wiktorekdev/gburn

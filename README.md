@@ -1,7 +1,7 @@
 # gburn
 
 <p align="center">
-  <strong>Grok Build burn rate</strong> — session tokens & API list-price cost, in a fullscreen TUI.
+  <strong>Grok Build burn</strong>: session tokens, API list price, and firm subsidy.
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <code>npx @wiktorekdev/gburn</code> &nbsp;·&nbsp; <code>bunx @wiktorekdev/gburn</code>
+  <code>npx @wiktorekdev/gburn</code> · <code>bunx @wiktorekdev/gburn</code>
 </p>
 
 ## Install
@@ -21,19 +21,24 @@
 ```bash
 npx @wiktorekdev/gburn
 bunx @wiktorekdev/gburn
-
-npm i -g @wiktorekdev/gburn   # → gburn
+npm i -g @wiktorekdev/gburn
 ```
 
 ## Usage
 
 ```bash
 gburn                 # TUI
-gburn --summary       # text table
-gburn --json          # JSON
-gburn --cwd ideas     # filter project
-gburn --home ~/.grok  # custom GROK_HOME
+gburn --summary
+gburn --json
+gburn --cwd ideas
+gburn --home ~/.grok
 ```
+
+| Env | Meaning |
+|-----|---------|
+| `GBURN_BILLING=sub` | default: LIST = what API would charge, SUB = firm subsidy, YOU = $0 |
+| `GBURN_BILLING=api` | LIST = what you pay, SUB = $0 |
+| `GBURN_DEMO=1` | sample sessions for screenshots |
 
 ### Keys
 
@@ -48,15 +53,15 @@ gburn --home ~/.grok  # custom GROK_HOME
 | `r` | Rescan |
 | `q` | Quit |
 
-## Pricing
+## Models (list $/1M)
 
-| Model | $/1M in | $/1M out |
-|-------|---------|----------|
+| Model | In | Out |
+|-------|----|-----|
 | Grok 4.5 | $2 | $6 |
 | Composer 2.5 Fast | $3 | $15 |
 | grok-build | $1 | $2 |
 
-Reads `~/.grok/sessions` (local only).
+Data: local `~/.grok/sessions`.
 
 ## Dev
 
@@ -66,6 +71,8 @@ cd gburn
 bun start
 bun run build
 ```
+
+TUI is custom TypeScript + ANSI (no React/Ink). Fast redraw, zero runtime deps.
 
 ## License
 

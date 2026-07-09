@@ -14,7 +14,13 @@ import {
   shortPath,
   truncate,
 } from "./format"
-import { OFFICIAL_PRICES, PRICING_SOURCE, PRICING_UPDATED } from "./pricing"
+import {
+  OFFICIAL_PRICES,
+  PRICING_SOURCE,
+  PRICING_UPDATED,
+  billingMode,
+  moneySplit,
+} from "./pricing"
 
 type View = "list" | "detail" | "pricing" | "help" | "models"
 
@@ -35,7 +41,7 @@ type State = {
   rows: number
 }
 
-// ── palette (bright truecolor — readable on dark terminals) ────────
+// ── palette (bright truecolor - readable on dark terminals) ────────
 const esc = (n: string) => `\x1b[${n}m`
 const rgb = (r: number, g: number, b: number) => `\x1b[38;2;${r};${g};${b}m`
 const bgRgb = (r: number, g: number, b: number) => `\x1b[48;2;${r};${g};${b}m`
@@ -43,7 +49,7 @@ const bgRgb = (r: number, g: number, b: number) => `\x1b[48;2;${r};${g};${b}m`
 const t = {
   reset: esc("0"),
   bold: esc("1"),
-  // fg — lifted so it doesn't look muddy
+  // fg - lifted so it doesn't look muddy
   text: rgb(235, 236, 242),
   muted: rgb(160, 165, 180),
   faint: rgb(110, 115, 130),
@@ -81,7 +87,7 @@ function visLen(s: string): number {
  *  Any SGR reset mid-line is followed by bg again so gaps keep the surface color
  *  (otherwise "sort cost" etc. sit on default black while the left side has a panel bg). */
 function paint(content: string, width: number, bg = t.bg): string {
-  // \x1b[0m clears bg — re-apply surface after every reset
+  // \x1b[0m clears bg - re-apply surface after every reset
   const fixed = content.replace(/\x1b\[0m/g, `\x1b[0m${bg}`)
   const plain = stripAnsi(fixed)
   if (plain.length > width) {
@@ -154,7 +160,7 @@ function costColor(amount: number, priced: boolean): string {
 
 function costLabel(s: SessionRecord): string {
   const n = s.usage.cost.totalCost
-  if (s.usage.inputTokens === 0 && s.usage.outputTokens === 0) return "—"
+  if (s.usage.inputTokens === 0 && s.usage.outputTokens === 0) return "-"
   if (!s.usage.hasDetailedUsage) return `~${formatUsd(n)}`
   return formatUsd(n)
 }
@@ -171,7 +177,7 @@ function sparkBar(ratio: number, width: number): string {
   if (width <= 0) return ""
   const r = Math.max(0, Math.min(1, ratio))
   const filled = Math.round(r * width)
-  // lighter blocks — less garish than solid █ wall
+  // lighter blocks - less garish than solid █ wall
   return "▓".repeat(filled) + "░".repeat(Math.max(0, width - filled))
 }
 
@@ -208,10 +214,12 @@ function colLayout(w: number): Cols {
 function titleBar(state: State): string {
   const w = state.cols
   const bg = t.bgHeader
+  const mode = billingMode()
   const left =
     `${t.bold}${t.accent} ◆ gburn ${t.reset}${bg}` +
-    `${t.muted}grok build · api cost${t.reset}${bg}`
-  const right = `${t.faint}${state.scan.sessions.length} sessions${t.reset}${bg}`
+    `${t.muted}list price · firm subsidy${t.reset}${bg}`
+  const right =
+    `${t.faint}${state.scan.sessions.length} sessions · ${mode}${t.reset}${bg}`
   const gap = Math.max(1, w - visLen(left) - visLen(right))
   return paint(left + bg + " ".repeat(gap) + right, w, bg)
 }
@@ -220,11 +228,13 @@ function statsBar(state: State): string {
   const w = state.cols
   const bg = t.bgRaised
   const totals = computeTotals(state.sessions)
+  const money = moneySplit(totals.totalCost)
   const parts = [
-    `${t.faint}COST${t.reset}${bg} ${t.bold}${t.green}${formatUsd(totals.totalCost)}${t.reset}${bg}`,
+    `${t.faint}LIST${t.reset}${bg} ${t.bold}${t.green}${formatUsd(money.listCost)}${t.reset}${bg}`,
+    `${t.faint}SUB${t.reset}${bg} ${t.bold}${t.yellow}${formatUsd(money.firmSubsidy)}${t.reset}${bg}`,
+    `${t.faint}YOU${t.reset}${bg} ${t.cyan}${formatUsd(money.userPay)}${t.reset}${bg}`,
     `${t.faint}IN${t.reset}${bg} ${t.cyan}${formatTokens(totals.inputTokens)}${t.reset}${bg}`,
     `${t.faint}OUT${t.reset}${bg} ${t.magenta}${formatTokens(totals.outputTokens)}${t.reset}${bg}`,
-    `${t.faint}OK${t.reset}${bg} ${t.yellow}${totals.withDetailed}/${totals.sessions}${t.reset}${bg}`,
   ]
   if (state.query) {
     parts.push(
@@ -238,7 +248,7 @@ function statsBar(state: State): string {
 function tableHeader(cols: Cols, w: number): string {
   const cells =
     " " +
-    padVis(`${t.faint}COST${t.reset}`, cols.cost, "right") +
+    padVis(`${t.faint}LIST${t.reset}`, cols.cost, "right") +
     (cols.bar ? " " + padVis("", cols.bar) : "") +
     " " +
     padVis(`${t.faint}INPUT${t.reset}`, cols.input, "right") +
@@ -554,9 +564,9 @@ function renderDetail(state: State): string[] {
   for (const [k, v] of [
     ["Project", shortPath(s.cwd, w - 16)],
     ["Model", s.modelId],
-    ["Models used", s.modelsUsed.join(", ") || "—"],
-    ["Agent", s.agentName || "—"],
-    ["Reasoning", s.reasoningEffort || "—"],
+    ["Models used", s.modelsUsed.join(", ") || "-"],
+    ["Agent", s.agentName || "-"],
+    ["Reasoning", s.reasoningEffort || "-"],
     ["Created", formatDate(s.createdAt)],
     ["Last active", formatDate(s.lastActiveAt)],
     ["Duration", formatDuration(s.sessionDurationSeconds)],
@@ -572,7 +582,7 @@ function renderDetail(state: State): string[] {
     [
       "Subagent",
       s.isSubagent
-        ? `yes · ${s.subagentType || "?"} · parent ${s.parentSessionId?.slice(0, 8) || "—"}`
+        ? `yes · ${s.subagentType || "?"} · parent ${s.parentSessionId?.slice(0, 8) || "-"}`
         : s.childSessionIds.length
           ? `parent of ${s.childSessionIds.length} child session(s)`
           : "no",
@@ -594,11 +604,16 @@ function renderDetail(state: State): string[] {
   )
 
   body.push(` ${t.border}${repeat("─", Math.min(w, 48))}${t.reset}`)
-  body.push(` ${t.bold}${t.green}Est. list-price cost${t.reset}`)
+  const money = moneySplit(u.cost.totalCost)
+  body.push(` ${t.bold}${t.green}Money${t.reset}  ${t.faint}mode ${money.mode}${t.reset}`)
   body.push(
-    ` ${t.faint}input  ${t.reset}${formatUsd(u.cost.inputCost)}` +
-      `   ${t.faint}output ${t.reset}${formatUsd(u.cost.outputCost)}` +
-      `   ${t.bold}${t.green}total ${formatUsd(u.cost.totalCost)}${t.reset}`,
+    ` ${t.faint}list   ${t.reset}${formatUsd(money.listCost)}` +
+      `   ${t.faint}in ${t.reset}${formatUsd(u.cost.inputCost)}` +
+      `   ${t.faint}out ${t.reset}${formatUsd(u.cost.outputCost)}`,
+  )
+  body.push(
+    ` ${t.faint}firm sub ${t.reset}${t.yellow}${formatUsd(money.firmSubsidy)}${t.reset}` +
+      `   ${t.faint}you pay ${t.reset}${t.cyan}${formatUsd(money.userPay)}${t.reset}`,
   )
 
   if (u.byModel.length > 1) {
@@ -671,10 +686,10 @@ function renderPricing(state: State): string[] {
   for (const p of OFFICIAL_PRICES) {
     if (p.id === "grok-build-0.1") continue
 
-    const inStr = p.inputPerM > 0 ? `$${p.inputPerM.toFixed(2)}` : "—"
-    const outStr = p.outputPerM > 0 ? `$${p.outputPerM.toFixed(2)}` : "—"
+    const inStr = p.inputPerM > 0 ? `$${p.inputPerM.toFixed(2)}` : "-"
+    const outStr = p.outputPerM > 0 ? `$${p.outputPerM.toFixed(2)}` : "-"
     const cached =
-      p.cachedInputPerM != null ? `$${p.cachedInputPerM.toFixed(2)}` : "—"
+      p.cachedInputPerM != null ? `$${p.cachedInputPerM.toFixed(2)}` : "-"
 
     body.push(
       " " +
@@ -682,7 +697,7 @@ function renderPricing(state: State): string[] {
         padVis(`${t.cyan}${inStr}${t.reset}`, 10, "right") +
         padVis(`${t.muted}${cached}${t.reset}`, 10, "right") +
         padVis(`${t.magenta}${outStr}${t.reset}`, 10, "right") +
-        padVis(`${t.faint}${p.context || "—"}${t.reset}`, 8, "right"),
+        padVis(`${t.faint}${p.context || "-"}${t.reset}`, 8, "right"),
     )
     if (p.note) body.push(`   ${t.faint}${p.note}${t.reset}`)
   }
@@ -709,7 +724,7 @@ function renderModels(state: State): string[] {
   const maxCost = Math.max(0.01, ...rows.map(([, r]) => r.cost))
 
   for (const [model, row] of rows) {
-    const costStr = row.cost > 0 || row.input > 0 || row.output > 0 ? formatUsd(row.cost) : "—"
+    const costStr = row.cost > 0 || row.input > 0 || row.output > 0 ? formatUsd(row.cost) : "-"
     body.push(
       " " +
         padVis(`${t.text}${truncate(model, 26)}${t.reset}`, 26) +
@@ -819,7 +834,7 @@ function frame(state: State): string[] {
 
 function draw(state: State) {
   const lines = frame(state)
-  // exact grid write into alt screen — no scrollback pollution
+  // exact grid write into alt screen - no scrollback pollution
   moveHome()
   process.stdout.write(lines.join("\n"))
 }
@@ -1003,31 +1018,35 @@ export async function runTui(
 
 export function printSummary(scan: ScanResult) {
   const totals = scan.totals
-  console.log(`${t.bold}${t.accent}◆ gburn${t.reset}  ${t.muted}grok build · api cost${t.reset}`)
+  const money = moneySplit(totals.totalCost)
+  console.log(
+    `${t.bold}${t.accent}◆ gburn${t.reset}  ${t.muted}list · firm subsidy (${money.mode})${t.reset}`,
+  )
   console.log(`${t.faint}${scan.sessionsDir}${t.reset}`)
   console.log()
   console.log(
     `${t.faint}sessions${t.reset} ${totals.sessions}` +
-      `  ${t.faint}detailed${t.reset} ${totals.withDetailed}` +
-      `  ${t.faint}cost${t.reset} ${t.green}${formatUsd(totals.totalCost)}${t.reset}`,
+      `  ${t.faint}list${t.reset} ${t.green}${formatUsd(money.listCost)}${t.reset}` +
+      `  ${t.faint}sub${t.reset} ${t.yellow}${formatUsd(money.firmSubsidy)}${t.reset}` +
+      `  ${t.faint}you${t.reset} ${t.cyan}${formatUsd(money.userPay)}${t.reset}`,
   )
   console.log(
     `${t.faint}tokens${t.reset}  ${t.cyan}in ${formatTokens(totals.inputTokens)}${t.reset}` +
       `  ${t.magenta}out ${formatTokens(totals.outputTokens)}${t.reset}` +
-      `  ${t.muted}Σ ${formatTokens(totals.totalTokens)}${t.reset}`,
+      `  ${t.muted}sum ${formatTokens(totals.totalTokens)}${t.reset}`,
   )
   console.log()
 
   const rows = sortSessions(scan.sessions, "cost", true).slice(0, 25)
   console.log(
-    pad("COST", 10, "right") +
+    pad("LIST", 10, "right") +
       pad("INPUT", 10, "right") +
       pad("OUTPUT", 10, "right") +
       "  " +
       pad("MODEL", 12) +
       "TITLE",
   )
-  console.log(repeat("─", 80))
+  console.log(repeat("-", 80))
   for (const s of rows) {
     const cost = costLabel(s)
     const cc = costColor(s.usage.cost.totalCost, true)
@@ -1042,7 +1061,7 @@ export function printSummary(scan: ScanResult) {
     )
   }
   if (scan.sessions.length > 25) {
-    console.log(`${t.faint}… +${scan.sessions.length - 25} more${t.reset}`)
+    console.log(`${t.faint}... +${scan.sessions.length - 25} more${t.reset}`)
   }
   console.log()
   console.log(`${t.faint}npx @wiktorekdev/gburn  · ${PRICING_SOURCE}${t.reset}`)
@@ -1050,8 +1069,10 @@ export function printSummary(scan: ScanResult) {
 
 export function printJson(scan: ScanResult) {
   const ordered = sortSessions(scan.sessions, "cost", true)
+  const money = moneySplit(scan.totals.totalCost)
   const payload = {
     scannedAt: scan.scannedAt,
+    billing: money,
     grokHome: scan.grokHome,
     sessionsDir: scan.sessionsDir,
     pricingSource: PRICING_SOURCE,
