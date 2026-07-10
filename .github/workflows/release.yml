@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
   build:
@@ -58,28 +57,3 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ matrix.asset }}
-
-  npm:
-    needs: build
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-          registry-url: "https://registry.npmjs.org"
-          scope: "@wiktorekdev"
-
-      - name: Ensure npm supports OIDC
-        run: |
-          npm install -g npm@11.5.1
-          npm --version
-
-      - name: Publish
-        run: npm publish --access public
-        env:
-          # setup-node injects a dummy token; clear so OIDC is used
-          NODE_AUTH_TOKEN: ""
