@@ -1,11 +1,14 @@
-﻿node_modules/
+/target/
+target-*/
+node_modules/
+vendor/
 dist/
 *.log
 .DS_Store
 .env
 tmp-out.json
 *.tmp
-tui.custom.backup.ts
-docs/screenshot.svg
+**/*.rs.bk
 *.tape
 bun.lock
+docs/screenshot.svg

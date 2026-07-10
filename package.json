@@ -1,30 +1,24 @@
 {
   "name": "@wiktorekdev/gburn",
-  "version": "1.0.2",
-  "description": "See how much your Grok Build sessions would cost at public API list prices. Fullscreen TUI.",
+  "version": "2.0.0",
+  "description": "Grok Build session token burn at public API list prices. Native Rust TUI.",
   "type": "module",
   "bin": {
-    "gburn": "dist/cli.js"
+    "gburn": "bin/gburn.js"
   },
   "files": [
-    "dist",
+    "bin",
+    "scripts",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "bun build src/index.ts --outfile dist/cli.js --target node --format esm && node scripts/postbuild-bin.mjs",
-    "start": "bun run src/index.ts",
-    "dev": "bun run src/index.ts",
-    "summary": "bun run src/index.ts --summary",
-    "json": "bun run src/index.ts --json",
-    "prepublishOnly": "bun run build"
+    "postinstall": "node scripts/install.mjs"
   },
   "keywords": [
     "grok",
     "grok-build",
     "xai",
-    "cursor",
-    "composer",
     "tokens",
     "cost",
     "usage",
