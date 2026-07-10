@@ -24,7 +24,8 @@ jobs:
           - os: macos-latest
             target: aarch64-apple-darwin
             asset: gburn-aarch64-apple-darwin
-          - os: macos-13
+          # cross-compile Intel Mac from arm runner (macos-13 runners are gone)
+          - os: macos-latest
             target: x86_64-apple-darwin
             asset: gburn-x86_64-apple-darwin
 
