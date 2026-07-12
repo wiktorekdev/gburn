@@ -17,7 +17,6 @@
   <code>npx @wiktorekdev/gburn</code> · <code>bunx @wiktorekdev/gburn</code>
 </p>
 
-Native **Rust** TUI (v2). npm/npx/bunx still work — they download the platform binary from GitHub Releases.
 
 ## Install
 
